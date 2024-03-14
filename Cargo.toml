@@ -1,0 +1,18 @@
+[package]
+name = "pinch"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = { version = "1.0.81", features = [] }
+mlua = { version = "0.9.6", features = ["lua54", "vendored"] }
+udev = "0.8.0"
+
+[profile.release]
+strip = true # Automatically strip symbols from the binary.
+opt-level = "z" # Optimize for size.
+lto = true
+codegen-units = 1
+panic = "abort"
