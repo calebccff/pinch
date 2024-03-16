@@ -7,7 +7,8 @@ A fast initramfs PID-1 written in Rust and driven by Lua.
 Small release builds:
 
 ```sh
-RUSTFLAGS="-Zlocation-detail=none" cargo +nightly build --release \
+RUSTFLAGS="-C target-feature=+crt-static -Zlocation-detail=none -C strip=symbols" \
+    cargo +nightly build --release \
     -Z build-std=std,panic_abort \
     -Z build-std-features=panic_immediate_abort \
     --target x86_64-unknown-linux-gnu

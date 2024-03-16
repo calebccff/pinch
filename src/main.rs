@@ -8,8 +8,10 @@ extern crate udev;
 fn main() -> Result<()> {
     let args: Vec<_> = env::args().collect();
     let script = std::fs::read_to_string(
-        args.get(1).map(String::as_str).unwrap_or("/usr/lib/pinch/init.luau")
+        args.get(1).map(String::as_str).unwrap_or("/usr/lib/pinch/init.lua")
     ).map_err(|e| anyhow!("Failed to read file: {}", e))?;
+
+    env::set_current_dir("/usr/lib/pinch")?;
 
     let lua = Lua::new();
 
@@ -21,11 +23,11 @@ fn main() -> Result<()> {
 
     lua.load(script).exec()?;
 
-    let mut enumerator = udev::Enumerator::new().unwrap();
+    let mut enumerator = udev::Enumerator::new()?;
 
-    enumerator.match_subsystem("tty").unwrap();
+    enumerator.match_is_initialized()?;
 
-    for device in enumerator.scan_devices().unwrap() {
+    for device in enumerator.scan_devices()? {
         println!("found device: {:?}", device.syspath());
     }
 
