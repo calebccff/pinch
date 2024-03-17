@@ -2,12 +2,75 @@
 
 A fast initramfs PID-1 written in Rust and driven by Lua.
 
+```
+[    0.440249] Run /init as init process
+[Starting Pinch]
+-- Initializing Lua environment
+-- Running script: init.env.lua
+-- Running script: /usr/share/pinch/device-qemu-amd64-init.lua
+-- Running script: init.lua
+[LUA] Pinch starting up on QEMU amd64 (Sun Mar 17 02:23:56 2024)
+[LUA] Framebuffer disabled: false
+[LUA] Kernel modules: 
+[RUST]: probing modules: {"libcomposite", "vfat", "virtio-gpu", "virtio_input", "virtio_pci", "virtio_blk", "evdev"}
+$ modprobe libcomposite
+$ modprobe vfat
+$ modprobe virtio-gpu
+[    0.478948] ACPI: bus type drm_connector registered
+$ modprobe virtio_input
+$ modprobe virtio_pci
+[    0.506230] ACPI: \_SB_.LNKB: Enabled at IRQ 10
+[    0.508777] input: QEMU Virtio Mouse as /devices/pci0000:00/0000:00:02.0/virtio0/input/input2
+[    0.519092] ACPI: \_SB_.LNKC: Enabled at IRQ 11
+[    0.521646] input: QEMU Virtio Keyboard as /devices/pci0000:00/0000:00:03.0/virtio1/input/input3
+[    0.530380] ACPI: \_SB_.LNKD: Enabled at IRQ 11
+[    0.540925] ACPI: \_SB_.LNKA: Enabled at IRQ 10
+[    0.546178] [drm] pci: virtio-vga detected at 0000:00:05.0
+[    0.547478] Console: switching to colour dummy device 80x25
+[    0.548359] virtio-pci 0000:00:05.0: vgaarb: deactivate vga console
+[    0.550564] [drm] features: +virgl +edid -resource_blob -host_visible
+[    0.550565] [drm] features: -context_init
+[    0.553883] [drm] number of scanouts: 1
+[    0.554524] [drm] number of cap sets: 2
+[    0.566724] [drm] cap set 0: id 1, max-version 1, max-size 308
+[    0.568695] [drm] cap set 1: id 2, max-version 2, max-size 1384
+[    0.570799] [drm] Initialized virtio_gpu 0.1.0 0 for 0000:00:05.0 on minor 0
+[    0.572532] fbcon: virtio_gpudrmfb (fb0) is primary device
+[    0.574948] Console: switching to colour frame buffer device 80x30
+[    0.581496] virtio-pci 0000:00:05.0: [drm] fb0: virtio_gpudrmfb frame buffer device
+$ modprobe virtio_blk
+[    0.601218] virtio_blk virtio4: 32/0/0 default/read/poll queues
+[    0.609238] virtio_blk virtio4: [vda] 8388608 512-byte logical blocks (4.29 GB/4.00 GiB)
+[    0.615545] GPT:Primary header thinks Alt. header is not at the end of the disk.
+[    0.617434] GPT:3692543 != 8388607
+[    0.618935] GPT:Alternate GPT header not at the end of the disk.
+[    0.621391] GPT:3692543 != 8388607
+[    0.622624] GPT: Use GNU Parted to correct GPT errors.
+[    0.624082]  vda: vda1 vda2
+$ modprobe evdev
+$ /sbin/udevd -d --resolve-names=never
+[    0.629269] udevd[805]: starting version 3.2.14
+[    0.631439] udevd[806]: starting eudev-3.2.14
+-- /sys/module/firmware_class/parameters/path > /lib/firmware/postmarketos
+[RUST]: udev: matching subsystem: block
+[RUST]: udev: matching subsystem: input
+[RUST]: udev: matching subsystem: graphics
+[RUST]: udev: scanning devices
+[LUA] found device: /dev/input/event1
+[LUA] found device: /dev/input/event2
+[LUA] found device: /dev/fb0
+[LUA] found device: /dev/vda
+[LUA] found device: /dev/vda1
+[LUA] found device: /dev/vda2
+[LUA] found device: /dev/input/event0
+```
+
 ## Building
 
 Small release builds:
 
 ```sh
-RUSTFLAGS="-C target-feature=+crt-static -Zlocation-detail=none -C strip=symbols" \
+RUSTFLAGS="-Zlocation-detail=none -C strip=symbols" \
     cargo +nightly build --release \
     -Z build-std=std,panic_abort \
     -Z build-std-features=panic_immediate_abort \
