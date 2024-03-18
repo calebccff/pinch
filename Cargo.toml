@@ -10,6 +10,7 @@ anyhow = { version = "1.0.81", features = [] }
 glob = "0.3.1"
 gpt = "3.1.0"
 mlua = { version = "0.9.6", features = ["lua54", "vendored"] }
+sys-mount = "3.0.1"
 udev = "0.8.0"
 xshell = "0.2.5"
 
